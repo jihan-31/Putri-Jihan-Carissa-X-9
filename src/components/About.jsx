@@ -11,7 +11,7 @@ const stats = [
     value: "100+",
     label: "Tugas Selesai",
   },
-  { icon: <TbMedal size={27} />, value: "5+", label: "Juara Kelas" },
+  { icon: <TbMedal size={28} />, value: "5+", label: "Juara Kelas" },
   { icon: <TbPencil size={28} />, value: "50+", label: "Tinta Pulpen" },
   { icon: <TbRocket size={28} />, value: "9+", label: "Pengalaman Belajar" },
 ];
