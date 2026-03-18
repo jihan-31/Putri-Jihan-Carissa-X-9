@@ -1,0 +1,163 @@
+// src/components/Skills.jsx
+
+import { useEffect, useRef, useState } from "react";
+
+const skillCategories = [
+  {
+    icon: "🗣️",
+    title: "Bahasa",
+    color: "bg-amber-100 dark:bg-amber-900/30",
+    skills: [
+      { name: "Bahasa Indonesia", level: 97 },
+      { name: "Bahasa Inggris", level: 85 },
+      { name: "Bahasa Arab", level: 95 },
+      { name: "Bahasa Jepang", level: 70 },
+    ],
+  },
+  {
+    icon: "🌍",
+    title: "IPS",
+    color: "bg-orange-100 dark:bg-orange-900/30",
+    skills: [
+      { name: "Sosiologi", level: 90 },
+      { name: "Ekonomi", level: 85 },
+      { name: "Geografi", level: 88 },
+      { name: "Sejarah", level: 85 },
+    ],
+  },
+  {
+    icon: "🧠",
+    title: "IPA",
+    color: "bg-yellow-100 dark:bg-yellow-900/30",
+    skills: [
+      { name: "Biologi", level: 95 },
+      { name: "Kimia", level: 90 },
+      { name: "Fisika", level: 90 },
+      { name: "Matematika", level: 85 },
+    ],
+  },
+];
+
+// Komponen satu progress bar dengan animasi
+function SkillBar({ name, level, animate }) {
+  return (
+    <div className="mb-4 last:mb-0">
+      <div className="flex justify-between items-center mb-1.5">
+        <span className="text-sm text-amber-800 dark:text-amber-200">
+          {name}
+        </span>
+        <span className="text-sm text-amber-600 dark:text-amber-400">
+          {level}%
+        </span>
+      </div>
+      <div className="w-full h-2 bg-amber-100 dark:bg-amber-800 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-amber-500 dark:bg-amber-400 rounded-full transition-all duration-1000 ease-out"
+          style={{ width: animate ? `${level}%` : "0%" }}
+        />
+      </div>
+    </div>
+  );
+}
+
+// Komponen satu card kategori
+function SkillCard({ category, animate }) {
+  return (
+    <div
+      className="
+        bg-white dark:bg-amber-900
+        border border-amber-200 dark:border-amber-700
+        rounded-2xl shadow-sm p-6
+        hover:shadow-md transition-shadow duration-300
+      "
+    >
+      {/* Header Card */}
+      <div className="flex items-center gap-3 mb-6">
+        <div
+          className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${category.color}`}
+        >
+          {category.icon}
+        </div>
+        <h3 className="text-lg font-bold text-amber-900 dark:text-amber-100">
+          {category.title}
+        </h3>
+      </div>
+
+      {/* Skill Bars */}
+      {category.skills.map((skill) => (
+        <SkillBar
+          key={skill.name}
+          name={skill.name}
+          level={skill.level}
+          animate={animate}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default function Skills() {
+  const [animate, setAnimate] = useState(false);
+  const sectionRef = useRef(null);
+
+  // Trigger animasi saat section masuk viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setAnimate(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section
+      id="keahlian"
+      ref={sectionRef}
+      className="
+        py-24 px-6
+        bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100/20
+        dark:from-amber-950 dark:via-amber-900 dark:to-orange-950/10
+      "
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* ── Header ── */}
+        <div className="text-center mb-14">
+          <p className="text-sm font-semibold text-amber-600 dark:text-amber-400 tracking-widest uppercase mb-2">
+            Keahlian
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-bold text-amber-900 dark:text-amber-100 mb-4">
+            Kemampuan Akademis
+          </h2>
+          <div className="w-16 h-1 bg-amber-600 dark:bg-amber-400 rounded-full mx-auto" />
+        </div>
+
+        {/* ── Grid 3 Card ── */}
+        <div
+          className="
+            grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6
+          "
+        >
+          {skillCategories.map((category, i) => (
+            <div
+              key={category.title}
+              className="transition-all duration-700 ease-out"
+              style={{
+                opacity: animate ? 1 : 0,
+                transform: animate ? "translateY(0)" : "translateY(40px)",
+                transitionDelay: `${i * 150}ms`,
+              }}
+            >
+              <SkillCard category={category} animate={animate} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
